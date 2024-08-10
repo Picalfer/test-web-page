@@ -4,9 +4,60 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <title>test page</title>
 </head>
 <body>
-    
+    <form id="myForm">
+        <input type="text" name="fields[TITLE]" placeholder="Заголовок лида" value="Новый лид" required>
+        <input type="text" name="fields[NAME]" placeholder="Ваше имя" required>
+        <input type="text" name="fields[PHONE][0][VALUE]" placeholder="Ваш телефон" required>
+        <input type="text" name="fields[PHONE][0][VALUE_TYPE]" value="WORK" hidden>
+        <input type="email" name="fields[EMAIL][0][VALUE]" placeholder="Ваш email" required>
+        <input type="text" name="fields[EMAIL][0][VALUE_TYPE]" value="WORK" hidden>
+        <input type="submit" value="Отправить">
+    </form>
+
+    <div id="modal">
+        <div id="modal-content">
+            <p id="modal-message"></p>
+            <button onclick="closeModal()">Закрыть</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('myForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Предотвращаем стандартное поведение формы
+
+            const formData = new FormData(this);
+
+            fetch('вебху в битрикс', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Проверка, что result присутствует и не undefined
+                if (data.result !== undefined) {
+                    showModal("Данные успешно отправлены! ID лида: " + data.result);
+                } else {
+                    showModal("Данные отправлены, но ID лида не получен.");
+                }
+            })
+            .catch(error => {
+                // Обработка ошибки
+                showModal("Произошла ошибка при отправке данных.");
+            });
+        });
+
+        function showModal(message) {
+            document.getElementById('modal-message').textContent = message;
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+    </script>
 </body>
 </html>
